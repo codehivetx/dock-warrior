@@ -34,3 +34,4 @@ COPY --from=build /opt /opt
 VOLUME /config /data
 ENV TASKRC=/config/task/taskrc
 ENV TASKDATA=/data/task
+ENV TIMEWARRIORDB=/data/timew
