@@ -27,7 +27,7 @@ now if you do `dock-warrior-task` it runs `task` inside of the container.
 The `/data` volume has subdirectories for each component:
 
 - `task/` (this is the `TASKDATA` variable)
-- `timew/`
+- `timew/` (this is the `TIMEWARRIORDB` variable)
 
 ### config
 
@@ -38,6 +38,20 @@ The `/config` volume is intended to be mounted readonly, and has subdirectories 
 The file `/config/task/taskrc` (no initial dot) is used as the TASKRC
 
 - `timew/`
+
+This isn't currently used, because timew keeps the data and config in the same spot.
+
+## MIGRATING
+
+to migrate from a 'desktop' installation:
+
+0. create the `data` and `config` directories
+1. copy `~/.taskrc` to `config/task/taskrc`
+2. edit `taskrc` to set `data.location=/data/task`
+3. you might want to disable any task hooks for now (TODO)
+4. copy `~/.task/` directory to become `data/task/` 
+5. copy `~/.timewarrior/` directory to become `data/timew/`
+
 
 ## AUTHOR
 
