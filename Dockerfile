@@ -30,6 +30,9 @@ RUN (mkdir timew ; cd timew ; curl -L https://github.com/GothenburgBitFactory/ti
 RUN (cd timew && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release . && make -j2 all install )
 
 FROM ubuntu:22.10 AS run
+RUN apt-get update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3
+
 COPY --from=build /opt /opt
 VOLUME /config /data
 ENV TASKRC=/config/task/taskrc

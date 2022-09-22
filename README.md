@@ -53,6 +53,11 @@ to migrate from a 'desktop' installation:
 5. copy `~/.timewarrior/` directory to become `data/timew/`
 
 
+### task-time integration
+
+- _for now_ I modified the standard hook to have `'/opt/bin/timew'` as the path instead of `'timew'` - TODO need to fix the container's search path
+
+
 ## AUTHOR
 
 Steven R. Loomis, [@srl295](https://srl295.github.io) of [@codehivetx](https://github.com/codehivetx)
