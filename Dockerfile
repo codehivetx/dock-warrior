@@ -32,10 +32,11 @@ RUN (cd timew && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release .
 
 FROM ubuntu:22.10 AS run
 RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3
-
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 tzdata
+ENV TZ="America/New_York"
 COPY --from=build /opt /opt
 VOLUME /config /data
 ENV TASKRC=/config/task/taskrc
 ENV TASKDATA=/data/task
 ENV TIMEWARRIORDB=/data/timew
+ENV PATH=/opt/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin
