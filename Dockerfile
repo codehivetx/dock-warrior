@@ -1,5 +1,6 @@
 FROM ubuntu:22.10 AS build
 MAINTAINER srl295
+LABEL org.opencontainers.image.source = "https://github.com/codehivetx/dock-warrior"
 
 USER root
 
