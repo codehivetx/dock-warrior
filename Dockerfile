@@ -51,7 +51,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y curl
 ARG BUGWARRIOR_VERSION=develop
 RUN (mkdir bugwarrior && cd bugwarrior && curl -L https://github.com/ralphbean/bugwarrior/tarball/${BUGWARRIOR_VERSION} | tar xfpz - --strip-components=1 )
 # TODO: install in build env
-RUN (cd bugwarrior && python3 setup.py install)
+ARG BUGWARRIOR_EXTRAS=jira
+RUN (cd bugwarrior && pip3 install .[${BUGWARRIOR_EXTRAS}])
 RUN rm -rf /bugwarrior
 ENV XDG_CONFIG_HOME=/config
-env BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
+ENV BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
