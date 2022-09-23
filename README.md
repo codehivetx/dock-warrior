@@ -41,6 +41,10 @@ The file `/config/task/taskrc` (no initial dot) is used as the TASKRC
 
 This isn't currently used, because timew keeps the data and config in the same spot.
 
+- `bugwarrior/bugwarriorrc`
+
+Bugwarrior is setup to look for its config file here.
+
 ## MIGRATING
 
 to migrate from a 'desktop' installation:

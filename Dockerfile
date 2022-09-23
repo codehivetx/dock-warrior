@@ -53,3 +53,5 @@ RUN (mkdir bugwarrior && cd bugwarrior && curl -L https://github.com/ralphbean/b
 # TODO: install in build env
 RUN (cd bugwarrior && python3 setup.py install)
 RUN rm -rf /bugwarrior
+ENV XDG_CONFIG_HOME=/config
+env BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
