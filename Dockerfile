@@ -30,6 +30,7 @@ ARG TIMEW_VERSION=1.4.3
 RUN (mkdir timew ; cd timew ; curl -L https://github.com/GothenburgBitFactory/timewarrior/releases/download/v${TIMEW_VERSION}/timew-${TIMEW_VERSION}.tar.gz | tar xfpz - --strip-components=1)
 RUN (cd timew && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release . && make -j2 all install )
 
+# Now, the runner
 FROM ubuntu:22.10 AS run
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 tzdata
@@ -40,3 +41,18 @@ ENV TASKRC=/config/task/taskrc
 ENV TASKDATA=/data/task
 ENV TIMEWARRIORDB=/data/timew
 ENV PATH=/opt/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin
+
+# TODO MOVE UP
+USER root
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y curl
+
+# TODO: version
+ARG BUGWARRIOR_VERSION=develop
+RUN (mkdir bugwarrior && cd bugwarrior && curl -L https://github.com/ralphbean/bugwarrior/tarball/${BUGWARRIOR_VERSION} | tar xfpz - --strip-components=1 )
+# TODO: install in build env
+ARG BUGWARRIOR_EXTRAS=jira
+RUN (cd bugwarrior && pip3 install .[${BUGWARRIOR_EXTRAS}])
+RUN rm -rf /bugwarrior
+ENV XDG_CONFIG_HOME=/config
+ENV BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
