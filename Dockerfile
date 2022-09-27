@@ -56,3 +56,4 @@ RUN (cd bugwarrior && pip3 install .[${BUGWARRIOR_EXTRAS}])
 RUN rm -rf /bugwarrior
 ENV XDG_CONFIG_HOME=/config
 ENV BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
+ENV TZ="America/Chicago"
