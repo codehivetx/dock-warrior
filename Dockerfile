@@ -32,8 +32,8 @@ RUN (cd timew && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release .
 
 # Now, the runner
 FROM ubuntu:22.10 AS run
-RUN apt-get update
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 tzdata
+RUN apt-get  update
+RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 tzdata python3-pip curl emacs-nox
 ENV TZ="America/New_York"
 COPY --from=build /opt /opt
 VOLUME /config /data
@@ -41,11 +41,6 @@ ENV TASKRC=/config/task/taskrc
 ENV TASKDATA=/data/task
 ENV TIMEWARRIORDB=/data/timew
 ENV PATH=/opt/bin:${HOME}/bin:/usr/local/bin:/usr/bin:/bin
-
-# TODO MOVE UP
-USER root
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 python3-pip
-RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y curl
 
 # TODO: version
 ARG BUGWARRIOR_VERSION=develop
@@ -57,3 +52,5 @@ RUN rm -rf /bugwarrior
 ENV XDG_CONFIG_HOME=/config
 ENV BUGWARRIORRC=/config/bugwarrior/bugwarriorrc
 ENV TZ="America/Chicago"
+ENV EDITOR="emacs"
+ENV VISUAL="emacs"
