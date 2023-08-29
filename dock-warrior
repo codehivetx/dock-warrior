@@ -1,0 +1,68 @@
+#!/bin/bash
+
+#
+# Wrapper script for using dock-warrior
+#
+# Usage:
+#    dock-warrior [ -b ] command args ...
+# Example:
+#    dock-warrior task +ACTIVE
+#    dock-warrior -b timew export ...
+#
+# or even:
+#  alias task='dock-warrior task'
+#  alias task-b='dock-warrior -b task'
+#
+# - '-b' goes into non-interactive mode.
+# - must set BASE 
+
+
+cmd=$1
+shift
+ITCMD=-it
+QUIET=n
+# keepalive time for container
+SLEEPTIME=1800
+KEEPRUNNING=yes
+if [[ "${cmd}" = "-b" ]];
+then
+    ITCMD=
+    QUIET=y
+    # pick up the real command
+    cmd=$1
+    shift
+fi
+BASE=/PATH/TO/DATA
+if [ ! -d "${BASE}" ];
+then
+    echo "# $0: Script error, set BASE to point at your data." >&2
+    exit 1
+fi
+
+# transcript goes here
+LOGDIR=${BASE}/data/log
+NOW=$(date "+%Y-%m-%dT%H:%M:%S")
+TODAY=$(date "+%Y-%m-%d")
+LOGFILE=${LOGDIR}/${TODAY}-${HOSTNAME}.log
+# write to the log
+(echo "${NOW}: ${cmd} $@" >> ${LOGFILE} ) || exit 1  # bail if can't write logfile
+CONTAINER=dock-warrior
+IMAGE=srl295/dock-warrior:dev
+# make sure the container is running
+
+if [[ "${KEEPRUNNING}" = "yes" ]];
+then
+    containers=$(docker ps -q -f name=${CONTAINER} 2>/dev/null)
+    if [[ "${containers}" = "" ]];
+    then
+	echo "# ${CONTAINER} not running, restarting" >&2
+	# start it
+	# https://stackoverflow.com/a/55734437/185799
+	# TODO: if QUIET..
+	docker rm -f ${CONTAINER} >&2 &&  docker >&2 run -d --name ${CONTAINER} -v ${BASE}/data:/data:rw -v ${BASE}/config:/config:rw ${IMAGE} /bin/bash -c "trap : TERM INT; sleep ${SLEEPTIME} & wait"
+    fi
+    exec docker exec ${ITCMD} ${CONTAINER} ${cmd} "$@"
+else
+    # Don't keep the container around.
+    exec docker run --rm ${ITCMD}  -v ${BASE}/data:/data:rw -v ${BASE}/config:/config:rw ${IMAGE} ${cmd} "$@"
+fi
