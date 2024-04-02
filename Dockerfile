@@ -1,4 +1,4 @@
-FROM ubuntu:22.10 AS build
+FROM ubuntu:latest AS build
 MAINTAINER srl295
 LABEL org.opencontainers.image.source = "https://github.com/codehivetx/dock-warrior"
 
@@ -26,12 +26,12 @@ ARG TASK_VERSION=2.6.2
 RUN (mkdir task ; cd task ; curl -L https://github.com/GothenburgBitFactory/taskwarrior/releases/download/v${TASK_VERSION}/task-${TASK_VERSION}.tar.gz | tar xfpz - --strip-components=1)
 RUN (cd task && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release . && make -j2 all install )
 
-ARG TIMEW_VERSION=1.4.3
+ARG TIMEW_VERSION=1.6.0
 RUN (mkdir timew ; cd timew ; curl -L https://github.com/GothenburgBitFactory/timewarrior/releases/download/v${TIMEW_VERSION}/timew-${TIMEW_VERSION}.tar.gz | tar xfpz - --strip-components=1)
 RUN (cd timew && cmake -DCMAKE_INSTALL_PREFIX=${OPT} -DCMAKE_BULD_TYPE=release . && make -j2 all install )
 
 # Now, the runner
-FROM ubuntu:22.10 AS run
+FROM ubuntu:latest AS run
 RUN apt-get  update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y python3 tzdata python3-pip curl emacs-nox
 ENV TZ="America/New_York"
